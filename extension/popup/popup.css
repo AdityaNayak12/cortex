@@ -1,0 +1,52 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  width: 320px;
+  min-height: 200px;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  background: #0f0f1a;
+  color: #e2e2f0;
+  padding: 16px;
+}
+
+header { margin-bottom: 12px; }
+
+h1 { font-size: 1.3rem; font-weight: 700; color: #a78bfa; }
+
+.subtitle { font-size: 0.75rem; color: #6b7280; }
+
+#status-section {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  margin-bottom: 12px;
+}
+
+#status-section span { color: #c4b5fd; font-weight: 600; }
+
+#actions { display: flex; gap: 8px; margin-bottom: 12px; }
+
+button {
+  flex: 1;
+  padding: 8px 6px;
+  border: none;
+  border-radius: 8px;
+  background: #6d28d9;
+  color: #fff;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+button:hover { background: #7c3aed; }
+
+#output {
+  background: #1a1a2e;
+  border-radius: 6px;
+  padding: 10px;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  max-height: 200px;
+  overflow-y: auto;
+  color: #d1d5db;
+}

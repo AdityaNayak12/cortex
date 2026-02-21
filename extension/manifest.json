@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "Cortex Study Tracker",
+  "version": "0.1.0",
+  "description": "Tracks your study activity on YouTube and LeetCode and syncs with the Cortex backend.",
+  "permissions": ["storage", "activeTab", "scripting"],
+  "host_permissions": [
+    "https://www.youtube.com/*",
+    "https://leetcode.com/*",
+    "http://localhost:8000/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.youtube.com/*"],
+      "js": ["content/youtube.js"]
+    },
+    {
+      "matches": ["https://leetcode.com/*"],
+      "js": ["content/leetcode.js"]
+    }
+  ],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "Cortex"
+  }
+}
