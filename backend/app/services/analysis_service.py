@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from app.db.crud import get_activities_by_user
-from app.core.gemini_client import generate_text
+from app.core.gemini_client import generate_text, GeminiAPIError
 from app.schemas.activity_schema import AnalysisResponse
 
 
@@ -22,5 +22,10 @@ def generate_analysis(db: Session, user_id: int) -> AnalysisResponse:
         f"and provide clear, actionable insights on strengths, weaknesses, and patterns:\n{summary}"
     )
 
-    insights = generate_text(prompt)
+    try:
+        insights = generate_text(prompt)
+    except GeminiAPIError:
+        insights = "Unable to generate insights. Please try again later."
+
     return AnalysisResponse(user_id=user_id, insights=insights)
+

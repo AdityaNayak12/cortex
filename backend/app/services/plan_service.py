@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from app.db.crud import get_activities_by_user
-from app.core.gemini_client import generate_text
+from app.core.gemini_client import generate_text, GeminiAPIError
 from app.schemas.activity_schema import StudyPlanResponse
 
 
@@ -23,5 +23,10 @@ def create_study_plan(db: Session, user_id: int) -> StudyPlanResponse:
         f"Prioritise weak areas and balance the workload:\n{summary}"
     )
 
-    plan = generate_text(prompt)
+    try:
+        plan = generate_text(prompt)
+    except GeminiAPIError:
+        plan = "Unable to generate a study plan. Please try again later."
+
     return StudyPlanResponse(user_id=user_id, plan=plan)
+

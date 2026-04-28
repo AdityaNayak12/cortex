@@ -20,14 +20,20 @@
         const durationMinutes = (Date.now() - startTime) / 60000;
         startTime = null;
 
-        chrome.runtime.sendMessage({
-            type: "TRACK_ACTIVITY",
-            payload: {
-                user_id: 1, // TODO: replace with real user ID from storage
-                subject,
-                topic: problem,
-                duration_minutes: parseFloat(durationMinutes.toFixed(2)),
-            },
+        chrome.storage.local.get("userId", ({ userId }) => {
+            if (!userId) {
+                console.warn("[Cortex] No user ID set — skipping tracking. Set it in the popup.");
+                return;
+            }
+            chrome.runtime.sendMessage({
+                type: "TRACK_ACTIVITY",
+                payload: {
+                    user_id: userId,
+                    subject,
+                    topic: problem,
+                    duration_minutes: parseFloat(durationMinutes.toFixed(2)),
+                },
+            });
         });
     }
 

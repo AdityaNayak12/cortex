@@ -1,5 +1,5 @@
 from datetime import datetime
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 from typing import Optional
 
 
@@ -12,6 +12,27 @@ class ActivityCreate(BaseModel):
     duration_minutes: float
     performance_score: Optional[float] = None  # 0–100
     notes: Optional[str] = None
+
+    @field_validator("subject")
+    @classmethod
+    def subject_must_not_be_empty(cls, v: str) -> str:
+        if not v or not v.strip():
+            raise ValueError("subject must not be empty")
+        return v.strip()
+
+    @field_validator("duration_minutes")
+    @classmethod
+    def duration_must_be_positive(cls, v: float) -> float:
+        if v <= 0:
+            raise ValueError("duration_minutes must be greater than 0")
+        return v
+
+    @field_validator("performance_score")
+    @classmethod
+    def score_must_be_in_range(cls, v: float | None) -> float | None:
+        if v is not None and (v < 0 or v > 100):
+            raise ValueError("performance_score must be between 0 and 100")
+        return v
 
 
 # ── Response schemas ──────────────────────────────────────────────────────────

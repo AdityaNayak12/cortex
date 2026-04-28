@@ -23,6 +23,35 @@ h1 { font-size: 1.3rem; font-weight: 700; color: #a78bfa; }
 
 #status-section span { color: #c4b5fd; font-weight: 600; }
 
+#user-id-section {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  font-size: 0.8rem;
+}
+
+#user-id-input {
+  width: 80px;
+  padding: 4px 6px;
+  border: 1px solid #374151;
+  border-radius: 4px;
+  background: #1a1a2e;
+  color: #e2e2f0;
+  font-size: 0.75rem;
+}
+
+#btn-save-id {
+  flex: none;
+  padding: 4px 10px;
+  font-size: 0.7rem;
+}
+
+.id-status { font-size: 0.7rem; }
+.id-status.success { color: #34d399; }
+.id-status.error { color: #f87171; }
+
+
 #actions { display: flex; gap: 8px; margin-bottom: 12px; }
 
 button {
