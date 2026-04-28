@@ -3,6 +3,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api import track, analyze, plan
 from app.db.database import engine
 from app.db import models
+from slowapi import Limiter
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
+from slowapi.middleware import SlowAPIMiddleware
+import os
+from dotenv import load_dotenv
 
 # Create tables on startup (use Alembic for production migrations)
 models.Base.metadata.create_all(bind=engine)
@@ -12,13 +18,24 @@ app = FastAPI(
     description="AI-powered study activity tracker and planner",
     version="0.1.0",
 )
+load_dotenv()
 
-# Allow all origins so the dashboard (Live Server :5500) and
-# Chrome extension can call the API without CORS errors.
+limiter = Limiter(key_func=get_remote_address, default_limits=["10/minute"])
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, lambda request, exc: ( {"detail": "Rate limit exceeded"}, 429 ))
+app.add_middleware(SlowAPIMiddleware)
+
+ALLOWED_ORIGINS = [
+    origin.strip()
+    for origin in os.getenv("ALLOWED_ORIGINS", "").split(",")
+    if origin.strip() and origin.strip().lower() != "null"
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
+    allow_origins=ALLOWED_ORIGINS,
+    allow_origin_regex=r"chrome-extension://.*",
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
