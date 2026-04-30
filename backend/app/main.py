@@ -9,6 +9,9 @@ from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
 import os
 from dotenv import load_dotenv
+from fastapi.security import OAuth2PasswordBearer
+from fastapi import Depends, HTTPException, status
+from jose import JWTError, jwt
 
 # Create tables on startup (use Alembic for production migrations)
 models.Base.metadata.create_all(bind=engine)
@@ -49,3 +52,26 @@ app.include_router(plan.router, prefix="/api/plan", tags=["Plan"])
 @app.get("/", tags=["Health"])
 def root():
     return {"status": "ok", "message": "Cortex API is running"}
+
+
+# JWT settings (in production, use env vars and strong secrets)
+SECRET_KEY = os.getenv("JWT_SECRET_KEY", "your-secret-key")
+ALGORITHM = "HS256"
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/token")
+
+
+def get_current_user(token: str = Depends(oauth2_scheme)):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        user_id: int = int(payload.get("sub"))
+        if user_id is None:
+            raise HTTPException(status_code=401, detail="Invalid authentication credentials")
+        return user_id
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Invalid authentication credentials")
+
+
+# Example: protect a route (apply to routers/endpoints as needed)
+# @app.get("/api/protected")
+# def protected_route(user_id: int = Depends(get_current_user)):
+#     return {"user_id": user_id}
