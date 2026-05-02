@@ -58,3 +58,15 @@ class AnalysisResponse(BaseModel):
 class StudyPlanResponse(BaseModel):
     user_id: int
     plan: str
+
+
+# ── User schemas ─────────────────────────────────────────────────────────────
+
+class UserCreate(BaseModel):
+    username: str
+    password: str
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str

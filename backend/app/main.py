@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api import track, analyze, plan
+from app.api import track, analyze, plan, auth
 from app.db.database import engine
 from app.db import models
 from slowapi import Limiter
@@ -44,6 +44,7 @@ app.add_middleware(
 )
 
 # Register routers
+app.include_router(auth.router, prefix="/api", tags=["Auth"])
 app.include_router(track.router, prefix="/api/track", tags=["Track"])
 app.include_router(analyze.router, prefix="/api/analyze", tags=["Analyze"])
 app.include_router(plan.router, prefix="/api/plan", tags=["Plan"])

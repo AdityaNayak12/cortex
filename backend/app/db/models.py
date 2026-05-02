@@ -3,6 +3,14 @@ from sqlalchemy.sql import func
 from app.db.database import Base
 
 
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String(50), unique=True, index=True, nullable=False)
+    hashed_password = Column(String(128), nullable=False)
+
+
 class Activity(Base):
     """Represents a single study activity session logged by the user."""
 
