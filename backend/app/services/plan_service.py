@@ -18,7 +18,7 @@ def create_study_plan(db: Session, user_id: int) -> StudyPlanResponse:
     summary = "\n".join(summary_lines)
 
     prompt = (
-        f"Based on the following recent study sessions for user {user_id}, "
+        f"Based on the following recent study sessions, "
         f"create a detailed, realistic daily study plan for tomorrow. "
         f"Prioritise weak areas and balance the workload:\n{summary}"
     )
